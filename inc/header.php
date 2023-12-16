@@ -36,6 +36,12 @@
                 max-width: 1400px;
                 margin: auto;
             }
+
+            .form-container {
+                max-width: 500px;
+                margin: auto;
+                padding: 10px;
+            }
         }
     </style>
     <title>Reddit Clone</title>
@@ -54,7 +60,9 @@
                         <input placeholder="Search Discussify" class="bg-gray block w-full outline-none"/>
                     </form>
 
-                    <a href="#" class="bg-primary py-2 px-4 rounded-full text-w hover:bg-blue duration-100 ease-in">Log In</a>
+                    <a href="login.php" class="bg-primary py-2 px-4 rounded-full text-w hover:bg-blue duration-100 ease-in">
+                        Log In
+                    </a>
                 </div>
       
         </div>
