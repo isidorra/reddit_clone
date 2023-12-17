@@ -1,3 +1,9 @@
+<?php 
+    require_once("app/config/config.php");
+    require_once("app/models/User.php");
+
+    $user = new User();
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -17,7 +23,8 @@
                     primary: '#d93a00',
                     gray: '#1a282d',
                     white: '#ffffff',
-                    blue: '#57899c'
+                    blue: '#57899c',
+                    red: '#fa3e3e'
                 },
                 fontFamily: {
                     ubuntu: ['Ubuntu', 'sans-serif']
@@ -60,9 +67,13 @@
                         <input placeholder="Search Discussify" class="bg-gray block w-full outline-none"/>
                     </form>
 
-                    <a href="login.php" class="bg-primary py-2 px-4 rounded-full text-w hover:bg-blue duration-100 ease-in">
-                        Log In
-                    </a>
+                    <?php if($user->is_logged()): ?>
+                        <a href="logout.php">Logout</a>
+                    <?php else: ?>
+                        <a href="login.php" class="bg-primary py-2 px-4 rounded-full text-w hover:bg-blue duration-100 ease-in">
+                            Log In
+                        </a>
+                    <?php endif; ?>
                 </div>
       
         </div>
