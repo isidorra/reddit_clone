@@ -13,6 +13,7 @@
     if($_SERVER['REQUEST_METHOD'] == "POST"){
         $username = $_POST['username'];
         $password = $_POST['password'];
+        $confirm_password = $_POST['confirm_password'];
         $email = $_POST['email'];
 
         if(!$user->is_unique($username)) {
@@ -34,6 +35,8 @@
         
     }
 ?>
+
+
 
 <!-- TO-DO: Input validation!!!!!!!!!! -->
 <form action="" method="POST" class="form-container" id="form">
@@ -77,3 +80,4 @@
 
 
 <?php require_once("inc/footer.php"); ?>
+<script src="public/js/auth-validation.js"></script>

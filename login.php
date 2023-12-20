@@ -8,19 +8,26 @@
         exit();
     }
 
+    $redirect = true;
+
     if($_SERVER['REQUEST_METHOD'] == "POST") {
         $username = $_POST['username'];
         $password = $_POST['password'];
 
         $result = $user->login($username, $password);
         if(!$result) {
-            header("Location: login.php");
-            exit();
+            $error_message = "Wrong username or password.";
+            $redirect = false;
+            
         }
 
-        header("Location: index.php");
-        exit();
+        if($redirect) {
+            header("Location: index.php");
+            exit();
+        }
     }
+
+
 
 ?>
 
@@ -35,7 +42,9 @@
     <label for="password" class="uppercase font-bold text-sm px-2">Password</label>
     <input name="password" type="password" required placeholder="Password" 
            class="block bg-gray outline-none w-full rounded-full py-3 px-4 mt-1 mb-3"/>
-
+    <?php if(isset($error_message)): ?>
+        <p class="text-red"> <?php echo $error_message; ?> </p>
+    <?php endif; ?>
     <button type="submit" 
             class="bg-primary w-full py-3 rounded-full mt-3 mb-4 hover:bg-blue duration-100 ease-in">
         Log in
