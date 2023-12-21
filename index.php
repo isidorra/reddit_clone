@@ -2,6 +2,7 @@
     require_once("inc/header.php");
     require_once("app/models/Topic.php");
     require_once("app/models/Discussion.php");
+    require_once("inc/converts/datetime.php");
 
     $topics = new Topic();
     $topics = $topics->get_all();
@@ -18,15 +19,15 @@
 
     
     <div class="max-container px-4">
-        <div class="flex flex-col md:flex-row md:gap-5">
+        <div class="flex flex-col w-11/12 mx-auto md:w-auto md:flex-row md:gap-5">
             <!-- Topics -->
-            <div class="border-b border-gray md:border-r md:border-b-0 md:pr-6">
-                <h2 class="uppercase text-sm opacity-80 mt-5 md:mt-0">Topics</h2>
-                <div class="flex items-center gap-7 mt-3 md:flex-col md:gap-3 md:items-start">
+            <div class="border-b border-gray pb-5 md:border-r md:border-b-0 md:pr-16">
+                <h2 class="uppercase text-xs md:text-sm opacity-80 mt-5 md:mt-0">Topics</h2>
+                <div class="flex items-center gap-5 mt-3 md:flex-col md:gap-5 md:items-start">
                     <?php foreach($topics as $topic): ?>
-                        <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-1 opacity-80">
                             <?php echo $topic['icon'] ?>
-                            <p><?php echo $topic['name'] ?></p>
+                            <p class="uppercase text-sm md:text-base"><?php echo $topic['name'] ?></p>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -34,11 +35,11 @@
 
             <!-- Feed -->
             <div class="w-full">
-                <div class="w-11/12 mx-auto">
-
+                <div class="md:w-11/12 mx-auto">
+                
                     <?php if($user->is_logged()): ?>
-                        <form action="" method="">
-                            <input placeholder="Start new Discussion..." class="bg-gray rounded-full outline-none py-2 px-4"/>
+                        <form action="" method="" class="mt-5 w-full mx-auto md:w-96 md:mx-0 flex items-center gap-1">
+                            <input placeholder="Start new Discussion..." class="w-full bg-gray rounded-full outline-none py-2 px-4"/>
                             <button class="border-2 border-gray py-2 px-4 rounded-full ml-2 hover:bg-blue duration-100 ease-in">Discuss</button>
                         </form>
                     <?php endif; ?>
@@ -47,26 +48,44 @@
                         <!-- Discussion -->
                         <div class="border-b border-gray py-7">
                             <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-3">
+                                <div class="flex items-center gap-2">
                                     <img src="public/assets/profile-photos/<?php echo $discussion['profile_photo'] ?>"
-                                         class="w-8"/>
-                                    <p><?php echo $discussion['host_username'] ?></p>
+                                         class="w-5 md:w-8"/>
+                                    <p class="text-base md:text-lg"><?php echo $discussion['host_username'] ?></p>
 
-                                    <div class="px-1 py-1 rounded-full bg-white"></div>
+                                    <div class="md:px-1 md:py-1 opacity-60">|</div>
 
-                                    <p><?php echo $discussion['created_at']?></p>
+                                    <p class="text-sm md:text-base opacity-60 font-thin"><?php echo time_elapsed_since_now($discussion['created_at'], $full = false)?></p>
 
-                                    <div class="px-1 py-1 rounded-full bg-white"></div>
+                                    <div class="md:px-1 md:py-1 opacity-60">|</div>
 
-                                    <p>Topic: <?php echo $discussion['topic_name'] ?></p>
+                                    <p>
+                                        <span class="text-sm md:text-base opacity-60 font-thin">Topic: </span>
+                                        <span class="bg-gray text-sm md:text-base text-primary px-2 py-1 md:px-4 rounded-full md:py-2 ml-2">
+                                            <?php echo $discussion['topic_name'] ?>
+                                        </span>
+                                    </p>
                                 </div>
 
-                                <button class="bg-primary py-2 px-4 rounded-full text-w hover:bg-blue duration-100 ease-in">Join</button>
+                                <button class="bg-primary px-2 py-1 md:py-2 md:px-4 text-base md:text-lg rounded-full hover:bg-blue duration-100 ease-in">Join</button>
                             </div>
                             
-                            <h3 class="text-2xl mt-6"><?php echo $discussion['subject']; ?></h3>
+                            <h3 class="text-xl md:text-2xl mt-6"><?php echo $discussion['subject']; ?></h3>
 
-                            <p class="mt-3">LIKE 0 COMMENTS 10</p>
+                            <div class="flex items-center gap-4 mt-7">
+                                <div class="flex items-center gap-2 opacity-50">
+                                    <img src="public/assets/icons/thumbs-up.svg"/>
+                                    <p>0</p>
+                                </div>
+                                <div class="flex items-center gap-2 opacity-50">
+                                    <img src="public/assets/icons/thumbs-down.svg"/>
+                                    <p>0</p>
+                                </div>
+                                <div class="flex items-center gap-2 opacity-50">
+                                    <img src="public/assets/icons/comment.svg"/>
+                                    <p>0</p>
+                                </div>
+                            </div>
                             
                         </div>
                     <?php endforeach; ?>
