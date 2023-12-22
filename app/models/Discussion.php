@@ -28,4 +28,18 @@ class Discussion {
         $run->execute();
     }
 
+    public function get_by_host($user_id) {
+        $query = "SELECT discussions.*, topics.name AS topic_name
+                FROM discussions
+                JOIN topics ON discussions.topic_id = topics.topic_id
+                WHERE host_id = ?
+                ORDER BY discussions.created_at DESC";
+        $run = $this->conn->prepare($query);
+        $run->bind_param("i", $user_id);
+        $run->execute();
+
+        $results = $run->get_result();
+        return $results->fetch_all(MYSQLI_ASSOC);
+    }
+
 }

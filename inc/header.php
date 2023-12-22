@@ -64,7 +64,6 @@
                 <a href="index.php" class="flex items-center gap-2">
                     <img src="public/assets/icons/logo.svg" alt="Logo" class="bg-white rounded-full px-1 py-1 md:px-3 md:py-2"/>
                     <p class="text-xl md:text-3xl font-bold">discussify</p>
-                    <p id="test">nestp</p>
                 </a>
 
                 <div class="flex items-center gap-3">

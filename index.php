@@ -87,7 +87,7 @@
                                     </p>
                                 </div>
 
-                                <button class="bg-primary px-2 py-1 md:py-2 md:px-4 text-base md:text-lg rounded-full hover:bg-blue duration-100 ease-in">Join</button>
+                                <button class="bg-primary px-2 py-1 md:py-2 md:px-4 text-base md:text-lg rounded-full hover:bg-blue duration-100 ease-in">Enter</button>
                             </div>
                             
                             <h3 class="text-xl md:text-2xl mt-6"><?php echo $discussion['subject']; ?></h3>
