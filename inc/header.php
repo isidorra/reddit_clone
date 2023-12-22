@@ -3,7 +3,10 @@
     require_once("app/models/User.php");
 
     $user = new User();
-    $logged_user = $user->get_by_id($_SESSION['user_id']);
+    if($user->is_logged()) {
+        $logged_user = $user->get_by_id($_SESSION['user_id']);
+    }
+    
 ?>
 
 <!DOCTYPE html>
@@ -15,6 +18,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="public/js/dropdown-header.js"></script>
     <script>
         tailwind.config = {
         theme: {
@@ -60,6 +64,7 @@
                 <a href="index.php" class="flex items-center gap-2">
                     <img src="public/assets/icons/logo.svg" alt="Logo" class="bg-white rounded-full px-1 py-1 md:px-3 md:py-2"/>
                     <p class="text-xl md:text-3xl font-bold">discussify</p>
+                    <p id="test">nestp</p>
                 </a>
 
                 <div class="flex items-center gap-3">
@@ -70,12 +75,12 @@
 
                     <div>
                         <?php if($user->is_logged()): ?>
-                            <button class="flex items-center gap-2">
+                            <button class="flex items-center gap-2" id="dropdown-btn">
                                 <img src="public/assets/profile-photos/<?php echo $logged_user['profile_photo']?>" class="w-6 md:w-8" alt="Profile Photo"/>
                                 <?php echo $logged_user['username'] ?>
-                                <img src="public/assets/icons/chevron-down.svg" alt="Arrow"/>
+                                <img src="public/assets/icons/chevron-down.svg" alt="Arrow" id="arrow-icon"/>
                             </button>
-                            <ul class="absolute bg-gray w-auto py-5 px-5 rounded-lg mt-2 drop-shadow-2xl">
+                            <ul class="absolute bg-gray w-auto py-5 px-5 rounded-lg mt-2 drop-shadow-2xl hidden" id="dropdown-menu">
                                 <li class="mb-3"><a href="profile.php">My Profile</a></li>
                                 <li class="text-blue mb-3"><hr/></li>
                                 <li><a href="logout.php">Logout</a></li>
