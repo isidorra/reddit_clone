@@ -71,4 +71,14 @@ class User {
         
         return true;
     }
+
+    public function get_by_id($user_id) {
+        $query = "SELECT * FROM users WHERE user_id = ?";
+        $run = $this->conn->prepare($query);
+        $run->bind_param("i", $user_id);
+        $run->execute();
+
+        $result = $run->get_result();
+        return $result->fetch_assoc();
+    }
 }

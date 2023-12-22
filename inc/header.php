@@ -3,6 +3,7 @@
     require_once("app/models/User.php");
 
     $user = new User();
+    $logged_user = $user->get_by_id($_SESSION['user_id']);
 ?>
 
 <!DOCTYPE html>
@@ -67,13 +68,25 @@
                         <input placeholder="Search Discussify" class="bg-gray block w-full outline-none"/>
                     </form>
 
-                    <?php if($user->is_logged()): ?>
-                        <a href="logout.php">Logout</a>
-                    <?php else: ?>
-                        <a href="login.php" class="bg-primary py-2 px-4 rounded-full text-w hover:bg-blue duration-100 ease-in">
-                            Log In
-                        </a>
-                    <?php endif; ?>
+                    <div>
+                        <?php if($user->is_logged()): ?>
+                            <button class="flex items-center gap-2">
+                                <img src="public/assets/profile-photos/<?php echo $logged_user['profile_photo']?>" class="w-6 md:w-8" alt="Profile Photo"/>
+                                <?php echo $logged_user['username'] ?>
+                                <img src="public/assets/icons/chevron-down.svg" alt="Arrow"/>
+                            </button>
+                            <ul class="absolute bg-gray w-auto py-5 px-5 rounded-lg mt-2 drop-shadow-2xl">
+                                <li class="mb-3"><a href="profile.php">My Profile</a></li>
+                                <li class="text-blue mb-3"><hr/></li>
+                                <li><a href="logout.php">Logout</a></li>
+                            </ul>
+            
+                        <?php else: ?>
+                            <a href="login.php" class="bg-primary py-2 px-4 rounded-full text-w hover:bg-blue duration-100 ease-in">
+                                Log In
+                            </a>
+                        <?php endif; ?>
+                    </div>
                 </div>
       
         </div>
