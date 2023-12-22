@@ -21,4 +21,11 @@ class Discussion {
         return $run->fetch_all(MYSQLI_ASSOC);
     }
 
+    public function create($user_id, $subject, $topic_id) {
+        $query = "INSERT INTO discussions (subject, host_id, topic_id) VALUES (?, ?, ?)";
+        $run = $this->conn->prepare($query);
+        $run->bind_param("sii", $subject, $user_id, $topic_id);
+        $run->execute();
+    }
+
 }

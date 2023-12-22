@@ -38,7 +38,6 @@
 
 
 
-<!-- TO-DO: Input validation!!!!!!!!!! -->
 <form action="" method="POST" class="form-container" id="form">
     <h1 class="text-3xl font-medium mb-9 mt-10">New Account</h1>
 

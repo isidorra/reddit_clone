@@ -1,0 +1,14 @@
+<?php
+    require_once("index.php");
+
+    if($_SERVER["REQUEST_METHOD"] == "POST") {
+        $user_id = $_SESSION['user_id'];
+        $subject = $_POST['subject'];
+        $topic_id = $_POST['topic_id'];
+
+        $discussion = new Discussion();
+        $discussion = $discussion->create($user_id, $subject, $topic_id);
+        
+        header("Location: index.php");
+        exit();
+    }

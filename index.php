@@ -1,14 +1,18 @@
 <?php 
+    ob_start();
     require_once("inc/header.php");
     require_once("app/models/Topic.php");
     require_once("app/models/Discussion.php");
     require_once("inc/converts/datetime.php");
+
 
     $topics = new Topic();
     $topics = $topics->get_all();
 
     $discussions = new Discussion();
     $discussions = $discussions->get_all();
+
+
 ?>
     <!-- Search input for smaller devices -->
     <form class="w-11/12 mx-auto flex items-center gap-2 bg-gray rounded-full py-2 px-4 mt-3 visible md:invisible">
@@ -38,9 +42,25 @@
                 <div class="md:w-11/12 mx-auto">
                 
                     <?php if($user->is_logged()): ?>
-                        <form action="" method="" class="mt-5 w-full mx-auto md:w-96 md:mx-0 flex items-center gap-1">
-                            <input placeholder="Start new Discussion..." class="w-full bg-gray rounded-full outline-none py-2 px-4"/>
-                            <button class="border-2 border-gray py-2 px-4 rounded-full ml-2 hover:bg-blue duration-100 ease-in">Discuss</button>
+                        <form action="create_discussion.php" method="POST" 
+                              class="mt-5 w-full mx-auto md:w-96 md:mx-0 flex items-start gap-1" id="create_discussion_form">
+
+                            <div>
+                                <input name="subject" id="subject" placeholder="Your thoughts..." 
+                                    class="w-full bg-gray rounded-full outline-none py-2 px-4" required/>
+                                <p class="text-red" id="subject_error"></p>
+                            </div>
+
+                            <select name="topic_id" class="w-auto bg-gray rounded-full outline-none py-2 px-1" required>
+                                <option selected disabled value="">Topic</option>
+                                <?php foreach($topics as $topic): ?>
+                                    <option value="<?php echo $topic['topic_id'] ?>"><?php echo $topic['name'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+
+                            <button type="submit" class="border-2 border-gray py-2 px-4 rounded-full ml-2 hover:bg-blue duration-100 ease-in">
+                                Discuss
+                            </button>
                         </form>
                     <?php endif; ?>
 
@@ -94,7 +114,7 @@
         </div>
     </div>
     
-
+    <script src="public/js/create-discussion-validation.js"></script>
 
 <?php 
     require_once("inc/footer.php");
