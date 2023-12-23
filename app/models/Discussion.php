@@ -11,7 +11,7 @@ class Discussion {
     }
 
     public function get_all() {
-        $query = "SELECT discussions.*, topics.name AS topic_name, users.username AS host_username, users.profile_photo
+        $query = "SELECT discussions.*, topics.name AS topic_name, users.username AS host_username, users.user_id AS host_id, users.profile_photo
         FROM discussions
         JOIN topics ON discussions.topic_id = topics.topic_id
         JOIN users ON discussions.host_id = users.user_id

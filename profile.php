@@ -4,15 +4,25 @@
     require_once("app/models/Discussion.php");
     require_once("inc/converts/datetime.php");
 
+    $current_user = new User();
+    $logged_user = new User();
+
     if($user->is_logged()) {
-        $logged_user = $user->get_by_id($_SESSION['user_id']);
+       
+        $current_user = $user->get_by_id($_GET["user_id"]);
+        $logged_user_id = $_SESSION["user_id"];
+ 
+        if($current_user["user_id"] === $logged_user_id) 
+            $isUsersProfile = true;
+        else 
+            $isUsersProfile = false;
     } else {
         header("Location: login.php");
         exit();
     }
 
     $discussions = new Discussion();
-    $discussions = $discussions->get_by_host($logged_user['user_id']);
+    $discussions = $discussions->get_by_host($current_user['user_id']);
 
 ?>
 
@@ -20,26 +30,28 @@
     <div class="flex flex-col gap-10 md:flex-row px-10">
         <!-- Profile Info -->
         <div class="mt-10 border-b border-gray pb-10 md:border-r md:border-gray md:pr-10 md:border-b-0">
-            <img src="public/assets/profile-photos/<?php echo $logged_user['profile_photo']?>"
+            <img src="public/assets/profile-photos/<?php echo $current_user['profile_photo']?>"
                 class="w-24 md:w-36 mx-auto"/>
 
             <div class="flex items-start gap-10">
                 <div>
                     <p class="uppercase opacity-80 text-blue font-thin text-sm mt-5">Username</p> 
-                    <p class="text-xl"><?php echo $logged_user['username'] ?></p>
+                    <p class="text-xl"><?php echo $current_user['username'] ?></p>
                 </div>
 
-                <button id="show-edit-form" 
-                        class="bg-bgColor border border-blue rounded-full py-2 px-2 text-base font-thin mt-5 hover:bg-blue">
-                    <img src="public/assets/icons/pen.svg" alt="Pen"/>
-                </button>
+                <?php if($isUsersProfile): ?>
+                    <button id="show-edit-form" 
+                            class="bg-bgColor border border-blue rounded-full py-2 px-2 text-base font-thin mt-5 hover:bg-blue">
+                        <img src="public/assets/icons/pen.svg" alt="Pen"/>
+                    </button>
+                <?php endif; ?>
             </div>
  
        
             <p class="uppercase opacity-80 text-blue font-thin text-sm mt-3">Email Address</p> 
-            <p class="text-xl"><?php echo $logged_user['email'] ?></p>
+            <p class="text-xl"><?php echo $current_user['email'] ?></p>
          
-            <p class="text-blue text-sm font-thin mt-5">Joined: <?php echo $logged_user['created_at'] ?></p>
+            <p class="text-blue text-sm font-thin mt-5">Joined: <?php echo $current_user['created_at'] ?></p>
 
             <form action="" method="POST" class="mt-9 hidden" id="edit-form">
                 <div class="flex items-center justify-between">
@@ -94,9 +106,11 @@
                                     <button class="bg-primary px-2 py-1 md:py-2 md:px-4 text-base md:text-lg rounded-full hover:bg-blue duration-100 ease-in">
                                         Enter
                                     </button>
-                                    <button class="bg-bgColor text-red border border-red px-2 py-1 md:py-2 md:px-4 text-base md:text-lg rounded-full hover:bg-blue duration-100 ease-in">
-                                        Delete
-                                    </button>
+                                    <?php if($isUsersProfile): ?>
+                                        <button class="bg-bgColor text-red border border-red hover:border-primary hover:text-primary px-2 py-1 md:py-2 md:px-4 text-base md:text-lg rounded-full">
+                                            Delete
+                                        </button>
+                                    <?php endif; ?>
                                 </div>
 
                     

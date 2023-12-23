@@ -80,7 +80,7 @@
                                 <img src="public/assets/icons/chevron-down.svg" alt="Arrow" id="arrow-icon"/>
                             </button>
                             <ul class="absolute bg-gray w-auto py-5 px-5 rounded-lg mt-2 drop-shadow-2xl hidden" id="dropdown-menu">
-                                <li class="mb-3"><a href="profile.php">My Profile</a></li>
+                                <li class="mb-3"><a href="profile.php?user_id=<?php echo $_SESSION['user_id'] ?>">My Profile</a></li>
                                 <li class="text-blue mb-3"><hr/></li>
                                 <li><a href="logout.php">Logout</a></li>
                             </ul>

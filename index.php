@@ -69,9 +69,11 @@
                         <div class="border-b border-gray py-7">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-2">
-                                    <img src="public/assets/profile-photos/<?php echo $discussion['profile_photo'] ?>"
-                                         class="w-5 md:w-8"/>
-                                    <p class="text-base md:text-lg"><?php echo $discussion['host_username'] ?></p>
+                                    <a href="profile.php?user_id=<?php echo $discussion['host_id'] ?>">
+                                        <img src="public/assets/profile-photos/<?php echo $discussion['profile_photo'] ?>"
+                                            class="w-5 md:w-8"/>
+                                        <p class="text-base md:text-lg"><?php echo $discussion['host_username'] ?></p>
+                                    </a>
 
                                     <div class="md:px-1 md:py-1 opacity-60">|</div>
 
@@ -87,7 +89,15 @@
                                     </p>
                                 </div>
 
-                                <button class="bg-primary px-2 py-1 md:py-2 md:px-4 text-base md:text-lg rounded-full hover:bg-blue duration-100 ease-in">Enter</button>
+                                <div>
+                                    <button class="bg-primary px-2 py-1 md:py-2 md:px-4 text-base md:text-lg rounded-full hover:bg-blue duration-100 ease-in">Enter</button>
+                                    <?php if($user->is_logged() && ($discussion["host_id"] == $_SESSION["user_id"])): ?>
+                                        <button class="bg-bgColor text-red border border-red hover:border-primary hover:text-primary px-2 py-1 md:py-2 md:px-4 text-base md:text-lg rounded-full">
+                                                Delete
+                                        </button>
+
+                                    <?php endif; ?>
+                                </div>
                             </div>
                             
                             <h3 class="text-xl md:text-2xl mt-6"><?php echo $discussion['subject']; ?></h3>
