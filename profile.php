@@ -24,28 +24,51 @@
     $discussions = new Discussion();
     $discussions = $discussions->get_by_host($current_user['user_id']);
 
+    $success = false;
+    $incorrect_old = false;
+    $incorrect_match = false;
+    $incorrect_length = false;
+
+    if($_SERVER["REQUEST_METHOD"] == "POST") {
+        $old_password = $_POST["old_password"];
+        $new_password = $_POST["new_password"];
+        $confirm_password = $_POST["confirm_password"];
+
+        $user = new User();
+        $result = $user->change_password($old_password, $new_password, $confirm_password, $current_user["user_id"]);
+
+        if($result == 14) {
+            header('Location: profile.php?user_id=<?php echo $_SESSION["user_id"] ?>');
+            exit();
+        } else if($result == 13) {
+            $success = true;
+        } else if($result == 12){
+            $incorrect_old = true;
+        } else if($result == 11) {
+            $incorrect_match = true;
+        } else {
+            $incorrect_length = true;
+        }
+    }
+
 ?>
 
 <div class="max-container">
     <div class="flex flex-col gap-10 md:flex-row px-10">
         <!-- Profile Info -->
         <div class="mt-10 border-b border-gray pb-10 md:border-r md:border-gray md:pr-10 md:border-b-0">
-            <img src="public/assets/profile-photos/<?php echo $current_user['profile_photo']?>"
-                class="w-24 md:w-36 mx-auto"/>
+                <div class="text-center">
+                    <img src="public/assets/profile-photos/<?php echo $current_user['profile_photo']?>"
+                        class="w-24 md:w-36 mx-auto"/>
+                </div>
 
-            <div class="flex items-start gap-10">
+
+
                 <div>
                     <p class="uppercase opacity-80 text-blue font-thin text-sm mt-5">Username</p> 
                     <p class="text-xl"><?php echo $current_user['username'] ?></p>
                 </div>
 
-                <?php if($isUsersProfile): ?>
-                    <button id="show-edit-form" 
-                            class="bg-bgColor border border-blue rounded-full py-2 px-2 text-base font-thin mt-5 hover:bg-blue">
-                        <img src="public/assets/icons/pen.svg" alt="Pen"/>
-                    </button>
-                <?php endif; ?>
-            </div>
  
        
             <p class="uppercase opacity-80 text-blue font-thin text-sm mt-3">Email Address</p> 
@@ -53,31 +76,46 @@
          
             <p class="text-blue text-sm font-thin mt-5">Joined: <?php echo $current_user['created_at'] ?></p>
 
-            <form action="" method="POST" class="mt-9 hidden" id="edit-form">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-xl">Edit Profile</h3>
-                    <img src="public/assets/icons/x-mark.svg" alt="Close" id="close-edit-form"/>
-                </div>
+            <button id="show-password-form" class="bg-bgColor border border-blue rounded-lg py-1 px-1 text-base font-thin 
+                                        mx-auto text-center hover:bg-blue flex items-center gap-2 mt-5 w-full justify-center">
+                    <img src="public/assets/icons/key.svg" alt="Key"/>
+                    Change Password
+            </button>
 
-                <input name="new_username" placeholder="New Username" id="new_username"
-                       class="block bg-gray text-sm outline-none w-full rounded-full py-3 px-4 mt-5 mb-3"/>
-                <p id="username_error" class="text-red"></p>
+            <?php if($success): ?>
+                        <p class="text-white">Successfully changed password.</p>
+            <?php endif; ?>
 
-                <input name="old_password" placeholder="Old Password" id="old_password"
-                       class="block bg-gray text-sm outline-none w-full rounded-full py-3 px-4 mt-1 mb-3"/>
-                <p id="old_password_error" class="text-red"></p>
+            <form action="" method="POST" class="mt-9 hidden w-11/12 mx-auto" id="password-form">
+                    <div class="flex items-center justify-between mb-5">
+                        <h3 class="text-base">Change Password</h3>
+                        <img src="public/assets/icons/x-mark.svg" alt="Close" id="close-password-form"/>
+                    </div>
 
-                <input name="new_password" placeholder="New Password" id="new_password"
-                       class="block bg-gray text-sm outline-none w-full rounded-full py-3 px-4 mt-1 mb-3"/>
-                <p id="new_password_error" class="text-red"></p>
+                    <input name="old_password" type="password" required placeholder="Old Password" 
+                            class="block bg-gray outline-none w-full rounded-full py-3 px-4 mt-1 mb-3"/>
+                    <?php if($incorrect_old): ?>
+                        <p class="text-red" id="incorrect_error">Incorrect old password.</p>
+                    <?php endif; ?>
 
-                <input name="confirm_password" placeholder="Confirm Password" id="confirm_password"
-                       class="block text-sm bg-gray outline-none w-full rounded-full py-3 px-4 mt-1 mb-3"/>
-                <p id="match_error" class="text-red"></p>
+                    <input name="new_password" type="password" required placeholder="New Password" 
+                            class="block bg-gray outline-none w-full rounded-full py-3 px-4 mt-1 mb-3"/>
+                    <?php if($incorrect_length): ?>
+                        <p class="text-red" id="length_error">Password must contain at least 7 characters.</p>
+                    <?php endif; ?>
 
-                <input placeholder="New Profile Photo" class="block text-sm bg-gray outline-none w-full rounded-full py-3 px-4 mt-1 mb-3"/>
-                <button type="submit" class="bg-primary rounded-full w-full py-3">Submit</button>
+                    <input name="confirm_password" type="password" required placeholder="Confirm Password" 
+                            class="block bg-gray outline-none w-full rounded-full py-3 px-4 mt-1 mb-3"/>
+                    <?php if($incorrect_match): ?>
+                        <p class="text-red" id="match_error">Passwords must match.</p>
+                    <?php endif; ?>
+
+                    
+                    <button type="submit" class="bg-primary rounded-full w-full py-2">Submit</button>
             </form>
+
+
+            
 
         </div>
 
@@ -143,4 +181,5 @@
 
 
 <?php require_once("inc/footer.php"); ?>
-<script src="public/js/edit-profile-show.js"></script>
+
+<script src="public/js/edit-password-show-form.js"></script>

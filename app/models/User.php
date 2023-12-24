@@ -81,4 +81,51 @@ class User {
         $result = $run->get_result();
         return $result->fetch_assoc();
     }
+
+    public function is_old_password_correct($old_password, $user_id) {
+        $query = "SELECT password FROM users WHERE user_id = ?";
+        $run = $this->conn->prepare($query);
+        $run->bind_param("i", $user_id);
+        $run->execute();
+        $result = $run->get_result();
+
+        $row = $result->fetch_assoc();  // Fetch the row, not just the password column
+
+        if ($row && isset($row['password']) && password_verify($old_password, $row['password'])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function change_password($old_password, $new_password, $confirm_password, $user_id) {
+        
+        if(strlen($new_password) < 7) {
+            return 10;
+        } else {
+            if($new_password != $confirm_password) {
+                return 11;
+            } else {
+                if($this->is_old_password_correct($old_password, $user_id)) {
+                    $query = "UPDATE users SET password = ? WHERE user_id = ?";
+                    $run = $this->conn->prepare($query);
+                    $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+                    $run->bind_param("si", $hashed_password, $user_id);
+                    $result = $run->execute();
+        
+                    if($result) 
+                        return 13;
+                    else 
+                        return 14;
+                    
+                } else {
+                    return 12;
+                }
+            }
+        }
+    }
+
+
+
+
 }
