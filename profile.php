@@ -76,11 +76,13 @@
          
             <p class="text-blue text-sm font-thin mt-5">Joined: <?php echo $current_user['created_at'] ?></p>
 
-            <button id="show-password-form" class="bg-bgColor border border-blue rounded-lg py-1 px-1 text-base font-thin 
+            <?php if($current_user["user_id"] == $_SESSION["user_id"]): ?>
+                <button id="show-password-form" class="bg-bgColor border border-blue rounded-lg py-1 px-1 text-base font-thin 
                                         mx-auto text-center hover:bg-blue flex items-center gap-2 mt-5 w-full justify-center">
                     <img src="public/assets/icons/key.svg" alt="Key"/>
                     Change Password
-            </button>
+                </button>
+            <?php endif; ?>
 
             <?php if($success): ?>
                         <p class="text-white">Successfully changed password.</p>
