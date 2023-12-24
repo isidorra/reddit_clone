@@ -54,6 +54,12 @@
                 margin: auto;
                 padding: 10px;
             }
+
+            .comments-container {
+                max-width: 800px;
+                margin: auto;
+                padding: 10px;
+            }
         }
     </style>
     <title>Reddit Clone</title>

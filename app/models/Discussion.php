@@ -28,6 +28,21 @@ class Discussion {
         $run->execute();
     }
 
+    public function get_by_id($discussion_id) {
+        $query = "SELECT discussions.*, topics.name AS topic_name, users.username AS host_username, users.user_id AS host_id, users.profile_photo
+                    FROM discussions
+                    JOIN topics ON discussions.topic_id = topics.topic_id
+                    JOIN users ON discussions.host_id = users.user_id
+                    WHERE discussion_id = ?";
+        $run = $this->conn->prepare($query);
+        $run->bind_param("i", $discussion_id);
+        $run->execute();
+
+        $result = $run->get_result();
+        return $result->fetch_assoc();
+
+    }
+
     public function get_by_host($user_id) {
         $query = "SELECT discussions.*, topics.name AS topic_name
                 FROM discussions
