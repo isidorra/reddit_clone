@@ -12,8 +12,10 @@ class Topic {
     }
 
     public function get_all() {
-        $query = "SELECT * FROM topics";
+        $query = "SELECT * FROM topics ORDER BY name ASC";
         $run = $this->conn->query($query);
         return $run->fetch_all(MYSQLI_ASSOC);
     }
+
+    
 }

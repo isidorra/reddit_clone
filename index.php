@@ -9,8 +9,10 @@
     $topics = new Topic();
     $topics = $topics->get_all();
 
+    $topic_id_filter = isset($_GET['topic_id']) ? $_GET['topic_id'] : null;
+
     $discussions = new Discussion();
-    $discussions = $discussions->get_all();
+    $discussions = $topic_id_filter ? $discussions->get_all_by_topic($topic_id_filter) : $discussions->get_all();
 
 
 ?>
@@ -27,12 +29,19 @@
             <!-- Topics -->
             <div class="border-b border-gray pb-5 md:border-r md:border-b-0 md:pr-16">
                 <h2 class="uppercase text-xs md:text-sm opacity-80 mt-5 md:mt-0">Topics</h2>
-                <div class="flex items-center gap-5 mt-3 md:flex-col md:gap-5 md:items-start">
+                <div class="flex items-center gap-5 mt-3 md:flex-col md:gap-6 md:items-start snap-x overflow-x-auto">
+                    <a href="index.php" class="flex items-center gap-2 opacity-80 mt-2 md:mt-0 mb-5 md:mb-0">
+                            <img src="public/assets/icons/all-topics.svg" alt="All Topics"/>
+                            <p class="uppercase text-sm md:text-base">All</p>
+                            <div class="md:px-1 md:py-1 opacity-60 md:hidden">|</div>
+                    </a>
                     <?php foreach($topics as $topic): ?>
-                        <div class="flex items-center gap-1 opacity-80">
+                        <a href="index.php?topic_id=<?php echo $topic["topic_id"] ?>"
+                            class="flex items-center gap-2 opacity-80 mt-2 md:mt-0 mb-5 md:mb-0">
                             <?php echo $topic['icon'] ?>
                             <p class="uppercase text-sm md:text-base"><?php echo $topic['name'] ?></p>
-                        </div>
+                            <div class="md:px-1 md:py-1 opacity-60 md:hidden">|</div>
+                        </a>
                     <?php endforeach; ?>
                 </div>
             </div>
