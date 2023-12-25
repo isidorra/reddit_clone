@@ -1,10 +1,9 @@
 <?php
-    ob_start();
+    //ob_start();
     require_once("inc/header.php");
     require_once("app/models/Discussion.php");
     require_once("app/models/Comment.php");
     require_once("app/models/Reply.php");
-    require_once("inc/converts/datetime.php");
     require_once("inc/converts/datetime.php");
 
     $discussion = new Discussion();
@@ -64,12 +63,27 @@
                     <p>0</p>
                 </div>
                 <div class="flex items-center gap-2 opacity-50">
-                    <img src="public/assets/icons/thumbs-down.svg"/>
-                    <p>0</p>
+                    <img src="public/assets/icons/user.svg"/>
+                    <p></p>
+                        <?php 
+                            $participants_number = new Discussion();
+                            $disc = new Discussion();
+                            $participants_number = $disc->get_participants_number($discussion["discussion_id"]);
+                            echo isset($participants_number) ? $participants_number : 0;
+                                                    
+                        ?>
+                    </p>
                 </div>
                     <div class="flex items-center gap-2 opacity-50">
                     <img src="public/assets/icons/comment.svg"/>
-                    <p>0</p>
+                    <p>
+                        <?php 
+                            $comments_number = new Discussion();
+                            $disc = new Discussion();
+                            $comments_number = $disc->get_comments_number($discussion["discussion_id"]); 
+                            echo isset($comments_number["total_count"]) ? $comments_number["total_count"] : 0;
+                        ?>
+                    </p>
                 </div>
             </div>
                                 

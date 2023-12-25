@@ -92,6 +92,47 @@ class Discussion {
 
     }
 
+    public function get_comments_number($discussion_id) {
+        $query = "SELECT
+                        c.comment_id,
+                        COUNT(DISTINCT c.comment_id) + COUNT(r.reply_id) AS total_count
+                    FROM
+                        comments c
+                    LEFT JOIN
+                        replies r ON c.comment_id = r.comment_id
+                    WHERE
+                        c.discussion_id = ?
+                    GROUP BY
+                        c.comment_id";
+        $run = $this->conn->prepare($query);
+        $run->bind_param("i", $discussion_id);
+        $run->execute();
+
+        $result = $run->get_result();
+        return $result->fetch_assoc();
+
+    }
+
+    public function get_participants_number($discussion_id) {
+        $query = "SELECT COUNT(DISTINCT p.user_id) AS unique_participants
+                    FROM (
+                        SELECT c.user_id FROM comments c WHERE c.discussion_id = ?
+                        UNION
+                        SELECT r.user_id FROM replies r
+                        INNER JOIN comments c ON r.comment_id = c.comment_id
+                        WHERE c.discussion_id = ?
+                    ) AS p";
+
+        $run = $this->conn->prepare($query);
+        $run->bind_param("ii", $discussion_id, $discussion_id);
+        $run->execute();
+
+        $result = $run->get_result();
+        $count = $result->fetch_assoc();
+
+        return $count['unique_participants'];
+    }
+
 
 
 

@@ -8,7 +8,8 @@
 
     $topics = new Topic();
     $topics = $topics->get_all();
-
+    
+    
     $search_query = isset($_GET['query']) ? $_GET['query'] : null;
 
     $discussions = new Discussion();
@@ -127,12 +128,28 @@
                                     <p>0</p>
                                 </div>
                                 <div class="flex items-center gap-2 opacity-50">
-                                    <img src="public/assets/icons/thumbs-down.svg"/>
-                                    <p>0</p>
+                                    <img src="public/assets/icons/user.svg"/>
+                                    <p>
+                                        <?php 
+                                                $participants_number = new Discussion();
+                                                $disc = new Discussion();
+                                                $participants_number = $disc->get_participants_number($discussion["discussion_id"]);
+                                                echo isset($participants_number) ? $participants_number : 0;
+                                                
+                                            ?>
+                                    </p>
                                 </div>
                                 <div class="flex items-center gap-2 opacity-50">
                                     <img src="public/assets/icons/comment.svg"/>
-                                    <p>0</p>
+                                    <p>
+                                        <?php 
+                                            $comments_number = new Discussion();
+                                            $disc = new Discussion();
+                                            $comments_number = $disc->get_comments_number($discussion["discussion_id"]); 
+                                            echo isset($comments_number["total_count"]) ? $comments_number["total_count"] : 0;
+                                        ?>
+                                        
+                                    </p>
                                 </div>
                             </div>
                             
