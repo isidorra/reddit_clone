@@ -3,14 +3,21 @@
     require_once("inc/header.php");
     require_once("app/models/Discussion.php");
     require_once("app/models/Comment.php");
+    require_once("app/models/Reply.php");
     require_once("inc/converts/datetime.php");
     require_once("inc/converts/datetime.php");
 
     $discussion = new Discussion();
     $discussion = $discussion->get_by_id($_GET["discussion_id"]);
 
+   
+
     $comments = new Comment();
     $comments = $comments->get_all_by_discussion_id($_GET["discussion_id"]);
+
+    
+
+    
 ?>
 
 <div class="max-container p-10">
@@ -69,7 +76,7 @@
     </div>
 
     <div class="comments-container">
-    <form action="create_comment.php?discussion_id=<?php echo $discussion['discussion_id']; ?>" method="POST" class="flex items-center gap-2 mt-5">
+        <form action="create_comment.php?discussion_id=<?php echo $discussion['discussion_id']; ?>" method="POST" class="flex items-center gap-2 mt-5">
 
             <textarea placeholder="Your Opinion" 
                 class="resize-none bg-gray outline-none w-full rounded-lg py-3 px-4" required name="content"></textarea>
@@ -78,6 +85,7 @@
 
         <div class="mt-10">
             <?php foreach($comments as $comment): ?>
+                <!-- Comment -->
                 <div class="border border-gray p-5 rounded-lg mb-5">
                 
                     <div class="flex items-center gap-4">
@@ -90,7 +98,41 @@
                         <p class="text-sm md:text-base opacity-60 font-thin"><?php echo time_elapsed_since_now($comment['created_at'], $full = false)?></p>
                     </div>
                     <p class="mt-5"><?php echo $comment["content"] ?></p>
+
+
                 </div>
+                <!-- Replies -->
+                <div class="flex flex-col items-end">
+                    <?php 
+                        $replies = new Reply();
+                        $replies = $replies->get_all_by_comment_id($comment["comment_id"]);
+                    ?>
+                    <?php foreach($replies as $reply): ?>
+                        <div class="border border-gray p-3 rounded-lg mb-5 w-11/12">
+                            <div class="flex items-center gap-4">
+                                <a href="profile.php?user_id=<?php echo $reply['user_id'] ?>" class="flex items-center gap-2">
+                                    <img src="public/assets/profile-photos/<?php echo $reply['profile_photo'] ?>"
+                                        class="w-5 md:w-8"/>
+                                    <p class="text-base md:text-lg"><?php echo $reply['username'] ?></p>
+                                </a>
+                                <div class="md:px-1 md:py-1 opacity-60">|</div>
+                                <p class="text-sm md:text-base opacity-60 font-thin"><?php echo time_elapsed_since_now($reply['created_at'], $full = false)?></p>
+                            </div>
+                            <p class="mt-3"><?php echo $reply["content"] ?></p>
+                        </div>
+                        
+                    <?php endforeach; ?>
+
+                    <!-- Post Reply -->
+                    <form action="create_reply.php?comment_id=<?php echo $comment['comment_id']; ?>&discussion_id=<?php echo $_GET["discussion_id"] ?>" method="POST" class="flex items-center gap-2 mb-10 w-11/12">
+
+                        <textarea placeholder="Reply" 
+                            class="resize-none bg-gray outline-none w-full rounded-lg py-3 px-4" required name="content"></textarea>
+                        <button type="submit" class="bg-primary rounded-lg py-3 px-5">Post</button>
+                    </form>
+
+                </div>
+
             <?php endforeach; ?>
         </div>
 

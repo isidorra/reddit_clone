@@ -57,4 +57,6 @@ class Discussion {
         return $results->fetch_all(MYSQLI_ASSOC);
     }
 
+
+
 }
