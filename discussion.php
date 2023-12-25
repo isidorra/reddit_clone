@@ -99,10 +99,15 @@
                     </div>
                     <p class="mt-5"><?php echo $comment["content"] ?></p>
 
+                    <?php $com = new Comment(); ?>
+                    <?php if($com->has_replies($comment["comment_id"]) > 0): ?>
+                    
+                        <button class="mt-5 opacity-80 border border-gray px-2 py-1 show-replies-btn">Show all replies</button>
+                    <?php endif; ?>
 
                 </div>
                 <!-- Replies -->
-                <div class="flex flex-col items-end">
+                <div class="flex flex-col items-end hidden replies">
                     <?php 
                         $replies = new Reply();
                         $replies = $replies->get_all_by_comment_id($comment["comment_id"]);
@@ -123,14 +128,19 @@
                         
                     <?php endforeach; ?>
 
-                    <!-- Post Reply -->
-                    <form action="create_reply.php?comment_id=<?php echo $comment['comment_id']; ?>&discussion_id=<?php echo $_GET["discussion_id"] ?>" method="POST" class="flex items-center gap-2 mb-10 w-11/12">
+                    <button class="mt-2 mb-3 opacity-80 border border-gray px-2 py-1 hide-replies-btn">Hide replies</button>
+
+                </div>
+
+                <!-- Post Reply -->
+                <div class="flex flex-col items-end">
+                    <form action="create_reply.php?comment_id=<?php echo $comment['comment_id']; ?>&discussion_id=<?php echo $_GET["discussion_id"] ?>" method="POST" 
+                            class="flex items-center gap-2 mb-10 w-11/12">
 
                         <textarea placeholder="Reply" 
                             class="resize-none bg-gray outline-none w-full rounded-lg py-3 px-4" required name="content"></textarea>
                         <button type="submit" class="bg-primary rounded-lg py-3 px-5">Post</button>
                     </form>
-
                 </div>
 
             <?php endforeach; ?>
@@ -139,3 +149,5 @@
 
     </div>
 </div>
+
+<script src="public/js/show_replies.js"></script>

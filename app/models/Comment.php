@@ -32,6 +32,18 @@ class Comment {
 
     }
 
+    public function has_replies($comment_id) {
+        $query = "SELECT * FROM replies WHERE comment_id=?";
+        $run = $this->conn->prepare($query);
+        $run->bind_param("i", $comment_id);
+        $run->execute();
+
+        $result = $run->get_result();
+        $results = $result->fetch_all(MYSQLI_ASSOC);
+
+        return count($results);
+    }
+
 
 
 }
