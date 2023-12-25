@@ -73,9 +73,11 @@
                 </a>
 
                 <div class="flex items-center gap-3">
-                    <form class="w-60 flex items-center gap-2 bg-gray rounded-full py-2 px-4 invisible md:visible">
+                    <form method="GET" action="index.php"
+                             class="w-60 flex items-center gap-2 bg-gray rounded-full py-2 px-4 invisible md:visible">
                         <img src="public/assets/icons/magnifying_glass.svg" alt="Search"/>
-                        <input placeholder="Search Discussify" class="bg-gray block w-full outline-none"/>
+                        <input name="query" placeholder="Search Discussions" class="bg-gray block w-full outline-none"/>
+                        <button type="submit" class="hidden">Search</button>
                     </form>
 
                     <div>

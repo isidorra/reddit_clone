@@ -9,10 +9,15 @@
     $topics = new Topic();
     $topics = $topics->get_all();
 
-    $topic_id_filter = isset($_GET['topic_id']) ? $_GET['topic_id'] : null;
+    $search_query = isset($_GET['query']) ? $_GET['query'] : null;
 
     $discussions = new Discussion();
-    $discussions = $topic_id_filter ? $discussions->get_all_by_topic($topic_id_filter) : $discussions->get_all();
+    if ($search_query) {
+        $discussions = $discussions->search($search_query);
+    } else {
+        $topic_id_filter = isset($_GET['topic_id']) ? $_GET['topic_id'] : null;
+        $discussions = $topic_id_filter ? $discussions->get_all_by_topic($topic_id_filter) : $discussions->get_all();
+    }
 
 
 ?>
@@ -72,7 +77,9 @@
                             </button>
                         </form>
                     <?php endif; ?>
-
+                    <?php if($search_query): ?>
+                        <h2>Search Results for <span class="text-blue"><?php echo $search_query ?></span></h2>
+                    <?php endif; ?>
                     <?php foreach($discussions as $discussion): ?>
                         <!-- Discussion -->
                         <div class="border-b border-gray py-7">

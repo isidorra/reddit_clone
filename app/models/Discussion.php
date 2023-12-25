@@ -73,6 +73,27 @@ class Discussion {
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
+    public function search($input) {
+
+        $query = "SELECT discussions.*, topics.name AS topic_name, users.username AS host_username, users.user_id AS host_id, users.profile_photo
+        FROM discussions
+        JOIN topics ON discussions.topic_id = topics.topic_id
+        JOIN users ON discussions.host_id = users.user_id
+        WHERE subject LIKE ?
+        ORDER BY discussions.created_at DESC";
+
+        $run = $this->conn->prepare($query);
+        $search_term = "%" . $input . "%";
+        $run->bind_param("s", $search_term);
+        $run->execute();
+
+        $result = $run->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+
+    }
+
+
+
 
 
 }
