@@ -1,5 +1,7 @@
 <?php 
 
+require_once("app/models/Reply.php");
+
 class Comment {
     protected $conn;
 
@@ -90,6 +92,66 @@ class Comment {
         return $row['like_count'];
     }
 
+
+    public function delete_all_likes($comment_id) {
+        $query = "DELETE FROM comment_likes WHERE comment_id=?";
+        $run = $this->conn->prepare($query);
+        $run->bind_param("i", $comment_id);
+        $run->execute();
+        
+    }
+
+    public function delete($comment_id) {
+        // Delete comment likes
+        $this->delete_all_likes($comment_id);
+    
+        // Delete replies and their likes
+        $this->delete_all_replies($comment_id);
+    
+        // Delete the comment itself
+        $query = "DELETE FROM comments WHERE comment_id=?";
+        $run = $this->conn->prepare($query);
+        $run->bind_param("i", $comment_id);
+        $run->execute();
+    }
+    
+    public function delete_all_replies($comment_id) {
+        // Get all reply_ids associated with the comment
+        $reply_ids = $this->get_reply_ids_by_comment($comment_id);
+    
+        // Delete reply likes for each reply
+        foreach ($reply_ids as $reply_id) {
+            $this->delete_reply_likes($reply_id);
+        }
+    
+        // Delete replies
+        $query = "DELETE FROM replies WHERE comment_id=?";
+        $run = $this->conn->prepare($query);
+        $run->bind_param("i", $comment_id);
+        $run->execute();
+    }
+    
+    public function delete_reply_likes($reply_id) {
+        $query = "DELETE FROM reply_likes WHERE reply_id=?";
+        $run = $this->conn->prepare($query);
+        $run->bind_param("i", $reply_id);
+        $run->execute();
+    }
+    
+    public function get_reply_ids_by_comment($comment_id) {
+        $query = "SELECT reply_id FROM replies WHERE comment_id=?";
+        $run = $this->conn->prepare($query);
+        $run->bind_param("i", $comment_id);
+        $run->execute();
+        $result = $run->get_result();
+        
+        $reply_ids = array();
+        while ($row = $result->fetch_assoc()) {
+            $reply_ids[] = $row['reply_id'];
+        }
+    
+        return $reply_ids;
+    }
 
 
 

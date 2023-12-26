@@ -88,14 +88,13 @@ class Reply {
         $reply = new Reply();
         $reply = $reply->delete_all_likes($reply_id);
 
+
         //Delete the reply itself
         $query = "DELETE FROM replies WHERE reply_id = ?";
         $run = $this->conn->prepare($query);
         $run->bind_param("i", $reply_id);
         $run->execute();
     }
-
-
 
 
         

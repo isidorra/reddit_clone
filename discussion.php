@@ -117,14 +117,22 @@
                 <!-- Comment -->
                 <div class="border border-gray p-5 rounded-lg mb-5">
                 
-                    <div class="flex items-center gap-4">
-                        <a href="profile.php?user_id=<?php echo $comment['user_id'] ?>" class="flex items-center gap-2">
-                            <img src="public/assets/profile-photos/<?php echo $comment['profile_photo'] ?>"
-                                class="w-5 md:w-8"/>
-                            <p class="text-base md:text-lg"><?php echo $comment['username'] ?></p>
-                        </a>
-                        <div class="md:px-1 md:py-1 opacity-60">|</div>
-                        <p class="text-sm md:text-base opacity-60 font-thin"><?php echo time_elapsed_since_now($comment['created_at'], $full = false)?></p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <a href="profile.php?user_id=<?php echo $comment['user_id'] ?>" class="flex items-center gap-2">
+                                <img src="public/assets/profile-photos/<?php echo $comment['profile_photo'] ?>"
+                                    class="w-5 md:w-8"/>
+                                <p class="text-base md:text-lg"><?php echo $comment['username'] ?></p>
+                            </a>
+                            <div class="md:px-1 md:py-1 opacity-60">|</div>
+                            <p class="text-sm md:text-base opacity-60 font-thin"><?php echo time_elapsed_since_now($comment['created_at'], $full = false)?></p>
+                        </div>
+                        <?php if($comment['user_id'] == $_SESSION["user_id"]): ?>
+                            <form method="POST" action="delete_comment.php?discussion_id=<?php echo $_GET["discussion_id"] ?>">
+                                <input type="hidden" name="comment_id" value="<?php echo $comment["comment_id"] ?>"/>
+                                <button class="border border-red rounded-lg py-1 px-2 text-red">Remove</button>
+                            </form>
+                        <?php endif; ?>
                     </div>
                     <p class="mt-5"><?php echo $comment["content"] ?></p>
 
