@@ -75,6 +75,28 @@ class Reply {
         return $row['like_count'];
     }
 
+    public function delete_all_likes($reply_id) {
+        $query = "DELETE FROM reply_likes WHERE reply_id=?";
+        $run = $this->conn->prepare($query);
+        $run->bind_param("i", $reply_id);
+        $run->execute();
+    }
+
+    public function delete($reply_id) {
+
+        //First delete all likes of the reply
+        $reply = new Reply();
+        $reply = $reply->delete_all_likes($reply_id);
+
+        //Delete the reply itself
+        $query = "DELETE FROM replies WHERE reply_id = ?";
+        $run = $this->conn->prepare($query);
+        $run->bind_param("i", $reply_id);
+        $run->execute();
+    }
+
+
+
 
         
 }

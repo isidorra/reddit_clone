@@ -166,14 +166,22 @@
                     ?>
                     <?php foreach($replies as $reply): ?>
                         <div class="border border-gray p-3 rounded-lg mb-5 w-11/12">
-                            <div class="flex items-center gap-4">
-                                <a href="profile.php?user_id=<?php echo $reply['user_id'] ?>" class="flex items-center gap-2">
-                                    <img src="public/assets/profile-photos/<?php echo $reply['profile_photo'] ?>"
-                                        class="w-5 md:w-8"/>
-                                    <p class="text-base md:text-lg"><?php echo $reply['username'] ?></p>
-                                </a>
-                                <div class="md:px-1 md:py-1 opacity-60">|</div>
-                                <p class="text-sm md:text-base opacity-60 font-thin"><?php echo time_elapsed_since_now($reply['created_at'], $full = false)?></p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-4">
+                                    <a href="profile.php?user_id=<?php echo $reply['user_id'] ?>" class="flex items-center gap-2">
+                                        <img src="public/assets/profile-photos/<?php echo $reply['profile_photo'] ?>"
+                                            class="w-5 md:w-8"/>
+                                        <p class="text-base md:text-lg"><?php echo $reply['username'] ?></p>
+                                    </a>
+                                    <div class="md:px-1 md:py-1 opacity-60">|</div>
+                                    <p class="text-sm md:text-base opacity-60 font-thin"><?php echo time_elapsed_since_now($reply['created_at'], $full = false)?></p>
+                                </div>
+                                <?php if($reply['user_id'] == $_SESSION["user_id"]): ?>
+                                    <form method="POST" action="delete_reply.php?discussion_id=<?php echo $_GET["discussion_id"] ?>">
+                                        <input type="hidden" name="reply_id" value="<?php echo $reply["reply_id"] ?>"/>
+                                        <button class="border border-red rounded-lg py-1 px-2 text-red">Remove</button>
+                                    </form>
+                                <?php endif; ?>
                             </div>
                             <p class="mt-3"><?php echo $reply["content"] ?></p>
 

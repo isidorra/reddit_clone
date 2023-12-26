@@ -128,7 +128,7 @@
                                     <button class="flex items-center gap-2 opacity-50">
                                         <?php 
                                         $disc = new Discussion();
-                                        if($disc->is_liked($discussion["discussion_id"], $_SESSION["user_id"])):?>
+                                        if($disc->is_liked($discussion["discussion_id"], $discussion["host_id"])):?>
                                             <img src="public/assets/icons/filled-like.svg"/>
                                         <?php else: ?>
                                             <img src="public/assets/icons/empty-like.svg"/>
