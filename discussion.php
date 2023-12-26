@@ -176,6 +176,28 @@
                                 <p class="text-sm md:text-base opacity-60 font-thin"><?php echo time_elapsed_since_now($reply['created_at'], $full = false)?></p>
                             </div>
                             <p class="mt-3"><?php echo $reply["content"] ?></p>
+
+                            <form method="POST" action="like_reply.php?discussion_id=<?php echo $_GET["discussion_id"] ?>" class="mt-5">
+                                    <input type="hidden" name="reply_id" value="<?php echo $reply["reply_id"] ?>">
+                                    <button class="flex items-center gap-2 opacity-50">
+                                        <?php 
+                                        $rep = new Reply();
+                                        if($rep->is_liked($reply["reply_id"], $_SESSION["user_id"])):?>
+                                            <img src="public/assets/icons/filled-like.svg"/>
+                                        <?php else: ?>
+                                            <img src="public/assets/icons/empty-like.svg"/>
+                                        <?php endif; ?>
+                                        <p>
+                                            <?php 
+                                                $rep_likes = new Reply(); 
+                                                $rep_likes = $rep_likes->get_likes_number($reply["reply_id"]);
+                                                echo $rep_likes;
+                                            ?>
+                                        </p>
+                                    </button>
+                            </form>
+
+
                         </div>
                         
                     <?php endforeach; ?>
