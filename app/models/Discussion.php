@@ -133,8 +133,54 @@ class Discussion {
         return $count['unique_participants'];
     }
 
+    public function like($discussion_id, $user_id) {
+        $query = "INSERT INTO discussion_likes (discussion_id, user_id) VALUES(?, ?)";
+        $run = $this->conn->prepare($query);
+        $run->bind_param("ii", $discussion_id, $user_id);
+        if ($run->execute()) {
+            echo "Operation successful";
+        } else {
+            echo "Error: " . $this->conn->error;
+        }
+    }
 
+    public function remove_like($discussion_id, $user_id) {
+        $query = "DELETE FROM discussion_likes WHERE discussion_id=? AND user_id=?";
+        $run = $this->conn->prepare($query);
+        $run->bind_param("ii", $discussion_id, $user_id);
+        if ($run->execute()) {
+            echo "Operation successful";
+        } else {
+            echo "Error: " . $this->conn->error;
+        }
+    }
 
+    public function is_liked($discussion_id, $user_id) {
+        $query = "SELECT 1 FROM discussion_likes WHERE discussion_id = ? AND user_id = ? LIMIT 1";
+        $run = $this->conn->prepare($query);
+        $run->bind_param("ii", $discussion_id, $user_id);
+        $run->execute();
+
+        $run->store_result();
+        $result = $run->num_rows > 0;
+
+        return $result;
+    }
+
+    public function get_likes_number($discussion_id) {
+        $query = "SELECT COUNT(*) AS like_count FROM discussion_likes WHERE discussion_id = ?";
+        $run = $this->conn->prepare($query);
+        $run->bind_param("i", $discussion_id);
+        $run->execute();
+    
+        $result = $run->get_result();
+        $row = $result->fetch_assoc();
+    
+        return $row['like_count'];
+    }
+    
 
 
 }
+
+?>
