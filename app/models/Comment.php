@@ -1,6 +1,6 @@
 <?php 
 
-require_once("app/models/Reply.php");
+
 
 class Comment {
     protected $conn;

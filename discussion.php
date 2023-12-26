@@ -47,9 +47,12 @@
 
             <div>
                 <?php if($user->is_logged() && ($discussion["host_id"] == $_SESSION["user_id"])): ?>
-                    <button class="bg-bgColor text-red border border-red hover:border-primary hover:text-primary px-2 py-1 md:py-2 md:px-4 text-base md:text-lg rounded-full">
-                        Delete
-                    </button>
+                    <form action="delete_discussion.php" method="POST">
+                            <input type="hidden" name="discussion_id" value="<?php echo $discussion["discussion_id"] ?>"/>
+                            <button class="border border-red text-red rounded-lg py-1 px-2">
+                                    Delete
+                            </button>
+                    </form>
 
                 <?php endif; ?>
             </div>
