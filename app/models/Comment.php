@@ -44,6 +44,52 @@ class Comment {
         return count($results);
     }
 
+    public function like($comment_id, $user_id) {
+        $query = "INSERT INTO comment_likes (comment_id, user_id) VALUES(?, ?)";
+        $run = $this->conn->prepare($query);
+        $run->bind_param("ii", $comment_id, $user_id);
+        if ($run->execute()) {
+            echo "Operation successful";
+        } else {
+            echo "Error: " . $this->conn->error;
+        }
+    }
+
+    public function remove_like($comment_id, $user_id) {
+        $query = "DELETE FROM comment_likes WHERE comment_id=? AND user_id=?";
+        $run = $this->conn->prepare($query);
+        $run->bind_param("ii", $comment_id, $user_id);
+        if ($run->execute()) {
+            echo "Operation successful";
+        } else {
+            echo "Error: " . $this->conn->error;
+        }
+    }
+
+    public function is_liked($comment_id, $user_id) {
+        $query = "SELECT 1 FROM comment_likes WHERE comment_id = ? AND user_id = ? LIMIT 1";
+        $run = $this->conn->prepare($query);
+        $run->bind_param("ii", $comment_id, $user_id);
+        $run->execute();
+
+        $run->store_result();
+        $result = $run->num_rows > 0;
+
+        return $result;
+    }
+
+    public function get_likes_number($comment_id) {
+        $query = "SELECT COUNT(*) AS like_count FROM comment_likes WHERE comment_id = ?";
+        $run = $this->conn->prepare($query);
+        $run->bind_param("i", $comment_id);
+        $run->execute();
+    
+        $result = $run->get_result();
+        $row = $result->fetch_assoc();
+    
+        return $row['like_count'];
+    }
+
 
 
 }

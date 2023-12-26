@@ -58,15 +58,15 @@
         <h3 class="text-xl md:text-2xl mt-6"><?php echo $discussion['subject']; ?></h3>
 
             <div class="flex items-center gap-4 mt-7">
-                <form method="POST" action="like.php">
+                <form method="POST" action="like_discussion.php">
                     <input type="hidden" name="discussion_id" value="<?php echo $discussion["discussion_id"]; ?>">
-                    <button class="flex items-center gap-2 opacity-50 like_btn">
+                    <button class="flex items-center gap-2 opacity-50">
                         <?php 
                             $disc = new Discussion();
                             if($disc->is_liked($discussion["discussion_id"], $_SESSION["user_id"])):?>
-                                <img src="public/assets/icons/filled-like.svg" class="like_icon"/>
+                                <img src="public/assets/icons/filled-like.svg"/>
                                 <?php else: ?>
-                                    <img src="public/assets/icons/empty-like.svg" class="like_icon"/>
+                                    <img src="public/assets/icons/empty-like.svg"/>
                                 <?php endif; ?>
                                 <p>
                                     <?php 
@@ -128,11 +128,34 @@
                     </div>
                     <p class="mt-5"><?php echo $comment["content"] ?></p>
 
-                    <?php $com = new Comment(); ?>
-                    <?php if($com->has_replies($comment["comment_id"]) > 0): ?>
+                    <div class="flex items-center gap-5 mt-5">
+
                     
-                        <button class="mt-5 opacity-80 border border-gray px-2 py-1 show-replies-btn">Show all replies</button>
-                    <?php endif; ?>
+                        <form method="POST" action="like_comment.php?discussion_id=<?php echo $_GET["discussion_id"] ?>">
+                                    <input type="hidden" name="comment_id" value="<?php echo $comment["comment_id"]; ?>">
+                                    <button class="flex items-center gap-2 opacity-50">
+                                        <?php 
+                                        $comm = new Comment();
+                                        if($comm->is_liked($comment["comment_id"], $_SESSION["user_id"])):?>
+                                            <img src="public/assets/icons/filled-like.svg"/>
+                                        <?php else: ?>
+                                            <img src="public/assets/icons/empty-like.svg"/>
+                                        <?php endif; ?>
+                                        <p>
+                                            <?php 
+                                                $comm_likes = new Comment(); 
+                                                $comm_likes = $comm_likes->get_likes_number($comment["comment_id"]);
+                                                echo $comm_likes;
+                                            ?>
+                                        </p>
+                                    </button>
+                        </form>
+                        <?php $com = new Comment(); ?>
+                        <?php if($com->has_replies($comment["comment_id"]) > 0): ?>
+                        
+                            <button class="opacity-80 border border-gray px-2 py-1 show-replies-btn">Show all replies</button>
+                        <?php endif; ?>
+                    </div>
 
                 </div>
                 <!-- Replies -->

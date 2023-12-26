@@ -7,8 +7,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $disc = new Discussion();
 
-    echo "Discussion ID: " . $_POST["discussion_id"] . "<br>";
-    echo "User ID: " . $_SESSION["user_id"] . "<br>";
    
     if (!$disc->is_liked($_POST["discussion_id"], $_SESSION["user_id"])) {
         $discussion = new Discussion();
