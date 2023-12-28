@@ -132,9 +132,9 @@
 
                                     <p class="text-sm md:text-base opacity-60 font-thin"><?php echo time_elapsed_since_now($discussion['created_at'], $full = false)?></p>
 
-                                    <div class="md:px-1 md:py-1 opacity-60">|</div>
+                                    <div class="hidden md:block md:px-1 md:py-1 opacity-60">|</div>
 
-                                    <p>
+                                    <p class="hidden md:block">
                                         <span class="text-sm md:text-base opacity-60 font-thin">Topic: </span>
                                         <span class="bg-gray text-sm md:text-base text-primary px-2 py-1 md:px-4 rounded-full md:py-2 ml-2">
                                             <?php echo $discussion['topic_name'] ?>
@@ -143,11 +143,11 @@
 
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    <button class="bg-primary px-2 py-1 md:py-2 md:px-4 text-base md:text-lg rounded-full hover:bg-blue duration-100 ease-in">
+                                    <button class="bg-primary px-2 py-1 md:py-2 md:px-4 text-base md:text-lg rounded-md hover:bg-blue duration-100 ease-in">
                                         Enter
                                     </button>
                                     <?php if($isUsersProfile): ?>
-                                        <button class="bg-bgColor text-red border border-red hover:border-primary hover:text-primary px-2 py-1 md:py-2 md:px-4 text-base md:text-lg rounded-full">
+                                        <button class="bg-bgColor text-red border border-red hover:border-primary hover:text-primary px-2 py-1 md:py-2 md:px-4 text-base md:text-lg rounded-md">
                                             Delete
                                         </button>
                                     <?php endif; ?>
@@ -156,6 +156,12 @@
                     
                                 
                             </div>
+                            <p class="visible md:hidden mt-2">
+                                        <span class="text-sm md:text-base opacity-60 font-thin">Topic: </span>
+                                        <span class="bg-gray text-sm md:text-base text-primary px-2 py-1 md:px-4 rounded-full md:py-2 ml-2">
+                                            <?php echo $discussion['topic_name'] ?>
+                                        </span>
+                            </p>
                             
                             <h3 class="text-xl md:text-2xl mt-6"><?php echo $discussion['subject']; ?></h3>
 

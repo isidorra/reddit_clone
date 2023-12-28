@@ -23,9 +23,11 @@
 
 ?>
     <!-- Search input for smaller devices -->
-    <form class="w-11/12 mx-auto flex items-center gap-2 bg-gray rounded-full py-2 px-4 mt-3 visible md:invisible">
+    <form method="GET" action="index.php" class="w-11/12 mx-auto flex items-center gap-2 bg-gray rounded-full py-2 px-4 mt-3 visible md:invisible">
             <img src="public/assets/icons/magnifying_glass.svg" alt="Search"/>
-            <input placeholder="Search Discussify" class="bg-gray block w-full outline-none"/>
+            <input placeholder="Search Discussify" name="query" class="bg-gray block w-full outline-none"/>
+
+            <button type="submit" class="hidden">Search</button>
     </form>
 
 
@@ -58,28 +60,29 @@
                 
                     <?php if($user->is_logged()): ?>
                         <form action="create_discussion.php" method="POST" 
-                              class="mt-5 w-full mx-auto md:w-96 md:mx-0 flex items-start gap-1" id="create_discussion_form">
+                              class="mt-5 w-full mx-auto md:w-96 md:mx-0 md:flex md:items-start md:gap-1" id="create_discussion_form">
 
                             <div>
                                 <input name="subject" id="subject" placeholder="Your thoughts..." 
-                                    class="w-full bg-gray rounded-full outline-none py-2 px-4" required/>
+                                    class="w-full bg-gray rounded-full outline-none py-3 px-4" required/>
                                 <p class="text-red" id="subject_error"></p>
                             </div>
+                            <div class="mt-2 md:mt-0 flex items-center justify-between">
+                                <select name="topic_id" class="w-full md:w-auto bg-gray rounded-full outline-none py-3 px-1" required>
+                                    <option selected disabled value="">Topic</option>
+                                    <?php foreach($topics as $topic): ?>
+                                        <option value="<?php echo $topic['topic_id'] ?>"><?php echo $topic['name'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
 
-                            <select name="topic_id" class="w-auto bg-gray rounded-full outline-none py-2 px-1" required>
-                                <option selected disabled value="">Topic</option>
-                                <?php foreach($topics as $topic): ?>
-                                    <option value="<?php echo $topic['topic_id'] ?>"><?php echo $topic['name'] ?></option>
-                                <?php endforeach; ?>
-                            </select>
-
-                            <button type="submit" class="border-2 border-gray py-2 px-4 rounded-full ml-2 hover:bg-blue duration-100 ease-in">
-                                Discuss
-                            </button>
+                                <button type="submit" class="border-2 border-gray py-1 px-2 md:py-2 md:px-4 rounded-full ml-2 hover:bg-blue duration-100 ease-in">
+                                    Discuss
+                                </button>
+                            </div>
                         </form>
                     <?php endif; ?>
                     <?php if($search_query): ?>
-                        <h2>Search Results for <span class="text-blue"><?php echo $search_query ?></span></h2>
+                        <h2 class="text-2xl mt-7">Search Results for <span class="text-blue"><?php echo $search_query ?></span></h2>
                     <?php endif; ?>
                     <?php foreach($discussions as $discussion): ?>
                         <!-- Discussion -->
@@ -92,13 +95,13 @@
                                         <p class="text-base md:text-lg"><?php echo $discussion['host_username'] ?></p>
                                     </a>
 
-                                    <div class="md:px-1 md:py-1 opacity-60">|</div>
+                                    <div class="hidden md:block md:px-1 md:py-1 opacity-60">|</div>
 
-                                    <p class="text-sm md:text-base opacity-60 font-thin"><?php echo time_elapsed_since_now($discussion['created_at'], $full = false)?></p>
+                                    <p class="hidden md:block text-sm md:text-base opacity-60 font-thin"><?php echo time_elapsed_since_now($discussion['created_at'], $full = false)?></p>
 
-                                    <div class="md:px-1 md:py-1 opacity-60">|</div>
+                                    <div class="hidden md:block md:px-1 md:py-1 opacity-60">|</div>
 
-                                    <p>
+                                    <p class="hidden md:block">
                                         <span class="text-sm md:text-base opacity-60 font-thin">Topic: </span>
                                         <span class="bg-gray text-sm md:text-base text-primary px-2 py-1 md:px-4 rounded-full md:py-2 ml-2">
                                             <?php echo $discussion['topic_name'] ?>
@@ -108,7 +111,7 @@
 
                                 <div class="flex items-center gap-2">
                                     <a href="discussion.php?discussion_id=<?php echo $discussion["discussion_id"] ?>" 
-                                        class="bg-primary px-2 py-1 md:py-2 md:px-4 text-base md:text-lg rounded-full hover:bg-blue duration-100 ease-in">
+                                        class="bg-primary py-2 px-4 text-sm md:text-base rounded-lg hover:bg-blue duration-100 ease-in">
                                         Enter
                                     </a>
                                     <?php if($user->is_logged() && ($discussion["host_id"] == $_SESSION["user_id"])): ?>
@@ -120,6 +123,19 @@
                                         </form>
                                     <?php endif; ?>
                                 </div>
+                            </div>
+
+                            <div class="flex items-center gap-2 mt-4">
+                                <p class="visible md:hidden text-sm md:text-base opacity-60 font-thin"><?php echo time_elapsed_since_now($discussion['created_at'], $full = false)?></p>
+
+                                <div class="visible md:hidden md:px-1 md:py-1 opacity-60">|</div>
+
+                                <p class="visible md:hidden">
+                                    <span class="text-sm md:text-base opacity-60 font-thin">Topic: </span>
+                                    <span class="bg-gray text-sm md:text-base text-primary px-2 py-1 md:px-4 rounded-full md:py-2 ml-2">
+                                        <?php echo $discussion['topic_name'] ?>
+                                    </span>
+                                </p>
                             </div>
                             
                             <h3 class="text-xl md:text-2xl mt-6"><?php echo $discussion['subject']; ?></h3>

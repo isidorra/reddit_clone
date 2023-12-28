@@ -58,7 +58,7 @@
             .comments-container {
                 max-width: 800px;
                 margin: auto;
-                padding: 10px;
+                padding: 5px;
             }
         }
     </style>
@@ -66,7 +66,7 @@
 </head>
 <body class="font-ubuntu bg-bgColor text-white">
     <div class="max-container">
-        <div class="flex items-center justify-between py-4 px-4 border-b border-gray">
+        <div class="flex items-center justify-between py-4 px-6 border-b border-gray">
                 <a href="index.php" class="flex items-center gap-2">
                     <img src="public/assets/icons/logo.svg" alt="Logo" class="bg-white rounded-full px-1 py-1 md:px-3 md:py-2"/>
                     <p class="text-xl md:text-3xl font-bold">discussify</p>
@@ -74,9 +74,12 @@
 
                 <div class="flex items-center gap-3">
                     <form method="GET" action="index.php"
-                             class="w-60 flex items-center gap-2 bg-gray rounded-full py-2 px-4 invisible md:visible">
-                        <img src="public/assets/icons/magnifying_glass.svg" alt="Search"/>
-                        <input name="query" placeholder="Search Discussions" class="bg-gray block w-full outline-none"/>
+                        class="w-60 bg-gray rounded-full py-2 px-4 hidden md:block">
+                        <div class="flex items-center gap-2">
+                            <img src="public/assets/icons/magnifying_glass.svg" alt="Search"/>
+                            <input name="query" placeholder="Search Discussions" class="bg-gray w-full outline-none"/>
+                        </div>
+                        
                         <button type="submit" class="hidden">Search</button>
                     </form>
 
@@ -94,7 +97,7 @@
                             </ul>
             
                         <?php else: ?>
-                            <a href="login.php" class="bg-primary py-2 px-4 rounded-full text-w hover:bg-blue duration-100 ease-in">
+                            <a href="login.php" class="bg-primary sm:text-base text-sm py-2 px-4 rounded-lg hover:bg-blue duration-100 ease-in">
                                 Log In
                             </a>
                         <?php endif; ?>

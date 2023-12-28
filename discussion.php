@@ -19,9 +19,9 @@
     
 ?>
 
-<div class="max-container p-10">
+<div class="max-container p-5 md:p-10">
     <!-- Discussion Title -->
-    <div class="border-b border-gray py-7">
+    <div class="border-b border-gray py-2 md:py-7">
 
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
@@ -31,13 +31,13 @@
                         <p class="text-base md:text-lg"><?php echo $discussion['host_username'] ?></p>
                 </a>
 
-                <div class="md:px-1 md:py-1 opacity-60">|</div>
+                <div class="hidden md:block md:px-1 md:py-1 opacity-60">|</div>
 
-                <p class="text-sm md:text-base opacity-60 font-thin"><?php echo time_elapsed_since_now($discussion['created_at'], $full = false)?></p>
+                <p class="hidden md:block text-sm md:text-base opacity-60 font-thin"><?php echo time_elapsed_since_now($discussion['created_at'], $full = false)?></p>
 
-                <div class="md:px-1 md:py-1 opacity-60">|</div>
+                <div class="hidden md:block md:px-1 md:py-1 opacity-60">|</div>
 
-                <p>
+                <p class="hidden md:block">
                     <span class="text-sm md:text-base opacity-60 font-thin">Topic: </span>
                         <span class="bg-gray text-sm md:text-base text-primary px-2 py-1 md:px-4 rounded-full md:py-2 ml-2">
                         <?php echo $discussion['topic_name'] ?>
@@ -57,6 +57,19 @@
                 <?php endif; ?>
             </div>
         </div>
+
+        <div class="flex items-center gap-2 mt-4">
+                                <p class="visible md:hidden text-sm md:text-base opacity-60 font-thin"><?php echo time_elapsed_since_now($discussion['created_at'], $full = false)?></p>
+
+                                <div class="visible md:hidden md:px-1 md:py-1 opacity-60">|</div>
+
+                                <p class="visible md:hidden">
+                                    <span class="text-sm md:text-base opacity-60 font-thin">Topic: </span>
+                                    <span class="bg-gray text-sm md:text-base text-primary px-2 py-1 md:px-4 rounded-full md:py-2 ml-2">
+                                        <?php echo $discussion['topic_name'] ?>
+                                    </span>
+                                </p>
+        </div>
                                 
         <h3 class="text-xl md:text-2xl mt-6"><?php echo $discussion['subject']; ?></h3>
 
@@ -66,11 +79,11 @@
                     <button class="flex items-center gap-2 opacity-50">
                         <?php 
                             $disc = new Discussion();
-                            if($disc->is_liked($discussion["discussion_id"], $_SESSION["user_id"])):?>
+                            if($user->is_logged() && $disc->is_liked($discussion["discussion_id"], $_SESSION["user_id"])): ?>
                                 <img src="public/assets/icons/filled-like.svg"/>
-                                <?php else: ?>
-                                    <img src="public/assets/icons/empty-like.svg"/>
-                                <?php endif; ?>
+                            <?php else: ?>
+                                <img src="public/assets/icons/empty-like.svg"/>
+                            <?php endif; ?>
                                 <p>
                                     <?php 
                                         $disc_likes = new Discussion; 
@@ -108,11 +121,13 @@
     </div>
 
     <div class="comments-container">
-        <form action="create_comment.php?discussion_id=<?php echo $discussion['discussion_id']; ?>" method="POST" class="flex items-center gap-2 mt-5">
+        <form action="create_comment.php?discussion_id=<?php echo $discussion['discussion_id']; ?>" method="POST" class="flex items-end gap-2 mt-5">
 
             <textarea placeholder="Your Opinion" 
                 class="resize-none bg-gray outline-none w-full rounded-lg py-3 px-4" required name="content"></textarea>
-            <button type="submit" class="bg-primary rounded-lg py-3 px-5">Post</button>
+            <button type="submit" class="bg-primary rounded-lg py-2 px-3 text-sm md:text-base md:py-2 md:px-4 hover:bg-blue duration-100 ease-in">
+                Post
+            </button>
         </form>
 
         <div class="mt-10">
@@ -127,16 +142,17 @@
                                     class="w-5 md:w-8"/>
                                 <p class="text-base md:text-lg"><?php echo $comment['username'] ?></p>
                             </a>
-                            <div class="md:px-1 md:py-1 opacity-60">|</div>
-                            <p class="text-sm md:text-base opacity-60 font-thin"><?php echo time_elapsed_since_now($comment['created_at'], $full = false)?></p>
+                            <div class="hidden md:block md:px-1 md:py-1 opacity-60">|</div>
+                            <p class="hidden md:block text-sm md:text-base opacity-60 font-thin"><?php echo time_elapsed_since_now($comment['created_at'], $full = false)?></p>
                         </div>
-                        <?php if($comment['user_id'] == $_SESSION["user_id"]): ?>
+                        <?php if($user->is_logged() && $comment['user_id'] == $_SESSION["user_id"]): ?>
                             <form method="POST" action="delete_comment.php?discussion_id=<?php echo $_GET["discussion_id"] ?>">
                                 <input type="hidden" name="comment_id" value="<?php echo $comment["comment_id"] ?>"/>
                                 <button class="border border-red rounded-lg py-1 px-2 text-red">Remove</button>
                             </form>
                         <?php endif; ?>
                     </div>
+                    <p class="visible md:hidden mt-2 text-sm md:text-base opacity-60 font-thin"><?php echo time_elapsed_since_now($comment['created_at'], $full = false)?></p>
                     <p class="mt-5"><?php echo $comment["content"] ?></p>
 
                     <div class="flex items-center gap-5 mt-5">
@@ -147,7 +163,7 @@
                                     <button class="flex items-center gap-2 opacity-50">
                                         <?php 
                                         $comm = new Comment();
-                                        if($comm->is_liked($comment["comment_id"], $_SESSION["user_id"])):?>
+                                        if($user->is_logged() && $comm->is_liked($comment["comment_id"], $_SESSION["user_id"])):?>
                                             <img src="public/assets/icons/filled-like.svg"/>
                                         <?php else: ?>
                                             <img src="public/assets/icons/empty-like.svg"/>
@@ -176,7 +192,7 @@
                         $replies = $replies->get_all_by_comment_id($comment["comment_id"]);
                     ?>
                     <?php foreach($replies as $reply): ?>
-                        <div class="border border-gray p-3 rounded-lg mb-5 w-11/12">
+                        <div class="border border-gray p-3 rounded-lg mb-2 md:mb-5 w-11/12">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-4">
                                     <a href="profile.php?user_id=<?php echo $reply['user_id'] ?>" class="flex items-center gap-2">
@@ -187,7 +203,7 @@
                                     <div class="md:px-1 md:py-1 opacity-60">|</div>
                                     <p class="text-sm md:text-base opacity-60 font-thin"><?php echo time_elapsed_since_now($reply['created_at'], $full = false)?></p>
                                 </div>
-                                <?php if($reply['user_id'] == $_SESSION["user_id"]): ?>
+                                <?php if($user->is_logged() && $reply['user_id'] == $_SESSION["user_id"]): ?>
                                     <form method="POST" action="delete_reply.php?discussion_id=<?php echo $_GET["discussion_id"] ?>">
                                         <input type="hidden" name="reply_id" value="<?php echo $reply["reply_id"] ?>"/>
                                         <button class="border border-red rounded-lg py-1 px-2 text-red">Remove</button>
@@ -201,7 +217,7 @@
                                     <button class="flex items-center gap-2 opacity-50">
                                         <?php 
                                         $rep = new Reply();
-                                        if($rep->is_liked($reply["reply_id"], $_SESSION["user_id"])):?>
+                                        if($user->is_logged() && $rep->is_liked($reply["reply_id"], $_SESSION["user_id"])):?>
                                             <img src="public/assets/icons/filled-like.svg"/>
                                         <?php else: ?>
                                             <img src="public/assets/icons/empty-like.svg"/>
@@ -221,7 +237,7 @@
                         
                     <?php endforeach; ?>
 
-                    <button class="mt-2 mb-3 opacity-80 border border-gray px-2 py-1 hide-replies-btn">Hide replies</button>
+                    <button class="mt-1 mb-10 opacity-80 border border-gray px-2 py-1 hide-replies-btn">Hide replies</button>
 
                 </div>
 
@@ -232,7 +248,9 @@
 
                         <textarea placeholder="Reply" 
                             class="resize-none bg-gray outline-none w-full rounded-lg py-3 px-4" required name="content"></textarea>
-                        <button type="submit" class="bg-primary rounded-lg py-3 px-5">Post</button>
+                        <button type="submit" class="bg-primary rounded-lg py-2 px-3 text-sm md:text-base md:py-2 md:px-4 hover:bg-blue duration-100 ease-in">
+                            Post
+                        </button>
                     </form>
                 </div>
 
