@@ -74,25 +74,47 @@
         <h3 class="text-xl md:text-2xl mt-6"><?php echo $discussion['subject']; ?></h3>
 
             <div class="flex items-center gap-4 mt-7">
-                <form method="POST" action="like_discussion.php">
-                    <input type="hidden" name="discussion_id" value="<?php echo $discussion["discussion_id"]; ?>">
-                    <button class="flex items-center gap-2 opacity-50">
-                        <?php 
-                            $disc = new Discussion();
-                            if($user->is_logged() && $disc->is_liked($discussion["discussion_id"], $_SESSION["user_id"])): ?>
-                                <img src="public/assets/icons/filled-like.svg"/>
-                            <?php else: ?>
-                                <img src="public/assets/icons/empty-like.svg"/>
-                            <?php endif; ?>
-                                <p>
-                                    <?php 
-                                        $disc_likes = new Discussion; 
-                                        $disc_likes = $disc_likes->get_likes_number($discussion["discussion_id"]);
-                                        echo $disc_likes;
-                                    ?>
-                                </p>
-                    </button>
-                </form>
+                <?php if($user->is_logged()): ?>
+                    <form method="POST" action="like_discussion.php">
+                        <input type="hidden" name="discussion_id" value="<?php echo $discussion["discussion_id"]; ?>">
+                        <button class="flex items-center gap-2 opacity-50">
+                            <?php 
+                                $disc = new Discussion();
+                                if($user->is_logged() && $disc->is_liked($discussion["discussion_id"], $_SESSION["user_id"])): ?>
+                                    <img src="public/assets/icons/filled-like.svg"/>
+                                <?php else: ?>
+                                    <img src="public/assets/icons/empty-like.svg"/>
+                                <?php endif; ?>
+                                    <p>
+                                        <?php 
+                                            $disc_likes = new Discussion; 
+                                            $disc_likes = $disc_likes->get_likes_number($discussion["discussion_id"]);
+                                            echo $disc_likes;
+                                        ?>
+                                    </p>
+                        </button>
+                    </form>
+                <?php else: ?>
+                    <form>
+                        <button class="flex items-center gap-2 opacity-50" disabled>
+                            <?php 
+                                $disc = new Discussion();
+                                if($user->is_logged() && $disc->is_liked($discussion["discussion_id"], $_SESSION["user_id"])): ?>
+                                    <img src="public/assets/icons/filled-like.svg"/>
+                                <?php else: ?>
+                                    <img src="public/assets/icons/empty-like.svg"/>
+                                <?php endif; ?>
+                                    <p>
+                                        <?php 
+                                            $disc_likes = new Discussion; 
+                                            $disc_likes = $disc_likes->get_likes_number($discussion["discussion_id"]);
+                                            echo $disc_likes;
+                                        ?>
+                                    </p>
+                        </button>
+                    </form>
+
+                <?php endif; ?>
                 <div class="flex items-center gap-2 opacity-50">
                     <img src="public/assets/icons/user.svg"/>
                     <p></p>

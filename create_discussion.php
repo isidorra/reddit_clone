@@ -1,6 +1,11 @@
 <?php
     require_once("index.php");
 
+    if(!$user->is_logged()) {
+        header("Location: login.php");
+        exit();
+    }
+
     if($_SERVER["REQUEST_METHOD"] == "POST") {
         $user_id = $_SESSION['user_id'];
         $subject = $_POST['subject'];
