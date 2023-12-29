@@ -143,13 +143,17 @@
 
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    <button class="bg-primary px-2 py-1 md:py-2 md:px-4 text-base md:text-lg rounded-md hover:bg-blue duration-100 ease-in">
+                                    <a href="discussion.php?discussion_id=<?php echo $discussion["discussion_id"] ?>" 
+                                    class="bg-primary py-2 px-4 text-sm md:text-base rounded-lg hover:bg-blue duration-100 ease-in">
                                         Enter
-                                    </button>
+                                    </a>
                                     <?php if($isUsersProfile): ?>
-                                        <button class="bg-bgColor text-red border border-red hover:border-primary hover:text-primary px-2 py-1 md:py-2 md:px-4 text-base md:text-lg rounded-md">
-                                            Delete
-                                        </button>
+                                        <form action="delete_discussion.php" method="POST">
+                                            <input type="hidden" name="discussion_id" value="<?php echo $discussion["discussion_id"] ?>"/>
+                                            <button class="border border-red text-red rounded-lg py-1 px-2">
+                                                    Delete
+                                            </button>
+                                        </form>
                                     <?php endif; ?>
                                 </div>
 
@@ -166,18 +170,71 @@
                             <h3 class="text-xl md:text-2xl mt-6"><?php echo $discussion['subject']; ?></h3>
 
                             <div class="flex items-center gap-4 mt-7">
-                                        <div class="flex items-center gap-2 opacity-50">
-                                            <img src="public/assets/icons/thumbs-up.svg"/>
-                                            <p>0</p>
-                                        </div>
-                                        <div class="flex items-center gap-2 opacity-50">
-                                            <img src="public/assets/icons/thumbs-down.svg"/>
-                                            <p>0</p>
-                                        </div>
-                                        <div class="flex items-center gap-2 opacity-50">
-                                            <img src="public/assets/icons/comment.svg"/>
-                                            <p>0</p>
-                                        </div>
+                                <?php if($user->is_logged()): ?>
+                                    <form method="POST" action="like_discussion.php">
+                                        <input type="hidden" name="discussion_id" value="<?php echo $discussion["discussion_id"]; ?>">
+                                        <button class="flex items-center gap-2 opacity-50">
+                                            <?php 
+                                            $disc = new Discussion();
+                                            if($disc->is_liked($discussion["discussion_id"], $discussion["host_id"])):?>
+                                                <img src="public/assets/icons/filled-like.svg"/>
+                                            <?php else: ?>
+                                                <img src="public/assets/icons/empty-like.svg"/>
+                                            <?php endif; ?>
+                                            <p>
+                                                <?php 
+                                                    $disc_likes = new Discussion; 
+                                                    $disc_likes = $disc_likes->get_likes_number($discussion["discussion_id"]);
+                                                    echo $disc_likes;
+                                                ?>
+                                            </p>
+                                        </button>
+                                    </form>
+                                <?php else: ?>
+                                    <form>
+                                        <button class="flex items-center gap-2 opacity-50" disabled>
+                                            <?php 
+                                            $disc = new Discussion();
+                                            if($disc->is_liked($discussion["discussion_id"], $discussion["host_id"])):?>
+                                                <img src="public/assets/icons/filled-like.svg"/>
+                                            <?php else: ?>
+                                                <img src="public/assets/icons/empty-like.svg"/>
+                                            <?php endif; ?>
+                                            <p>
+                                                <?php 
+                                                    $disc_likes = new Discussion; 
+                                                    $disc_likes = $disc_likes->get_likes_number($discussion["discussion_id"]);
+                                                    echo $disc_likes;
+                                                ?>
+                                            </p>
+                                        </button>
+                                    </form>
+
+                                <?php endif; ?>
+                                <div class="flex items-center gap-2 opacity-50">
+                                    <img src="public/assets/icons/user.svg"/>
+                                    <p>
+                                        <?php 
+                                                $participants_number = new Discussion();
+                                                $disc = new Discussion();
+                                                $participants_number = $disc->get_participants_number($discussion["discussion_id"]);
+                                                echo isset($participants_number) ? $participants_number : 0;
+                                                
+                                            ?>
+                                    </p>
+                                </div>
+                                <div class="flex items-center gap-2 opacity-50">
+                                    <img src="public/assets/icons/comment.svg"/>
+                                    <p>
+                                        <?php 
+                                            $comments_number = new Discussion();
+                                            $disc = new Discussion();
+                                            $comments_number = $disc->get_comments_number($discussion["discussion_id"]); 
+                                            echo isset($comments_number["total_count"]) ? $comments_number["total_count"] : 0;
+                                        ?>
+                                        
+                                    </p>
+                                </div>
                             </div>
                             
                         </div>
